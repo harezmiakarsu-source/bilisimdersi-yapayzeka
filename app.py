@@ -1,5 +1,5 @@
+import google.generativeai as genai
 import streamlit as st
-from google import genai
 
 # Sayfa yapılandırması
 st.set_page_config(
@@ -12,16 +12,19 @@ st.write(
     " destek alabilirsiniz."
 )
 
-# API anahtarını güvenli bir şekilde Streamlit gizli alanından (secrets) alıyoruz
+# API anahtarını güvenli bir şekilde Streamlit secrets alanından alıyoruz
 try:
   api_key = st.secrets["GOOGLE_API_KEY"]
-  client = genai.Client(api_key=api_key)
+  genai.configure(api_key=api_key)
 except Exception as e:
   st.error(
       "API anahtarı bulunamadı! Lütfen Streamlit Cloud ayarlarından Secrets"
       " bölümüne GOOGLE_API_KEY ekleyin."
   )
   st.stop()
+
+# En stabil ve hatasız çalışan model tanımı
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 # Sohbet geçmişini hafızada tutma
 if "messages" not in st.session_state:
@@ -38,11 +41,9 @@ if prompt := st.chat_input("Sormak istediğin soruyu yaz..."):
   with st.chat_message("user"):
     st.markdown(prompt)
 
-  # Gemini'ye yanıt alma (Doğru ve güncel model tanımlaması)
+  # Klasik ve kararlı yöntemle yanıt alma
   try:
-    response = client.models.generate_content(
-        model="gemini-2.5-flash", contents=prompt
-    )
+    response = model.generate_content(prompt)
     bot_reply = response.text
   except Exception as e:
     bot_reply = f"Bir hata oluştu: {str(e)}"
