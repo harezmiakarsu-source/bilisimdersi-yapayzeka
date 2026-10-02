@@ -38,11 +38,10 @@ if prompt := st.chat_input("Sormak istediğin soruyu yaz..."):
   with st.chat_message("user"):
     st.markdown(prompt)
 
-  # Gemini'ye gönderip yanıt alma (model adını güncel kararlı sürüm yapıyoruz)
+  # Gemini'ye yanıt alma (Doğru ve güncel model tanımlaması)
   try:
     response = client.models.generate_content(
-        model="gemini-1.5-flash",
-        contents=prompt,
+        model="gemini-2.5-flash", contents=prompt
     )
     bot_reply = response.text
   except Exception as e:
