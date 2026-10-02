@@ -41,7 +41,7 @@ if prompt := st.chat_input("Sormak istediğin soruyu yaz..."):
   # Gemini'ye gönderip yanıt alma (model adını güncel kararlı sürüm yapıyoruz)
   try:
     response = client.models.generate_content(
-        model="gemini-2.0-flash",
+        model="gemini-3.8-flash",
         contents=prompt,
     )
     bot_reply = response.text
